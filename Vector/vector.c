@@ -1,6 +1,7 @@
 #include "vector.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <memory.h>
 
 int vector_init(vector_t *vec)
 {	
@@ -106,6 +107,25 @@ void vector_free(vector_t *vec)
 		return;
 	
 	free(vec->items);
+}
+
+void vector_reverse(vector_t *vec)
+{
+	if (!vec)
+		return;
+	
+	int idx = 0;
+	int half_idx = vec->size / 2;
+	for (idx = 0; idx < half_idx; idx++) {
+		void *temp = vec->items[idx];
+		vec->items[idx] = vec->items[vec->size-idx-1];
+		vec->items[vec->size-idx-1] = temp;
+	}
+}
+
+void vector_sort(vector_t *vec, int num_elements, int size, int (*cmp)(const void *lhs,const void *rhs))
+{
+	qsort(vec->items, num_elements, size, cmp);
 }
 
 static int vector_resize(vector_t *vec, int capacity)

@@ -1,8 +1,12 @@
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
 
-#define VECTOR_INIT_CAPACITY 32
-
+#define VECTOR_INIT_CAPACITY 1
+#define QSORT_THRESHOLD 20		
+/* when elements number is larger than 20, 
+ * use qsort for sorting,
+ * otherwise use insertion sort */
+ 
 typedef struct vector_t {
 	int size;
 	int capacity;
@@ -17,6 +21,8 @@ void *vector_get(vector_t *vec, int index);
 int vector_set(vector_t *vec, int index, void *item);
 int vector_delete(vector_t *vec, int index);
 void vector_free(vector_t *vec);
+void vector_reverse(vector_t *vec);
+void vector_sort(vector_t *vec, int num_elements, int size, int (*cmp)(const void *lhs, const void *rhs));
 static int vector_resize(vector_t *vec, int capacity);
 
 #endif /* _VECTOR_H_ */
