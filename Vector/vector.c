@@ -20,6 +20,7 @@ int vector_init(vector_t *vec)
 	return 0;
 }
 
+/* return -1 if null vector */
 int vector_size(vector_t *vec)
 {
 	if (!vec)
@@ -28,6 +29,7 @@ int vector_size(vector_t *vec)
 	return vec->size;
 }
 
+/* return -1 if null vector */
 int vector_capacity(vector_t *vec)
 {
 	if (!vec)
@@ -36,7 +38,23 @@ int vector_capacity(vector_t *vec)
 	return vec->capacity; 
 }
 
-void vector_add(vector_t *vec, void *val);
+/* return 0 only if it succeed to add an element, otherwise should return -1 */
+int vector_add(vector_t *vec, void *val)
+{
+	if (!vec)
+		return -1
+	
+	if (vec->size == vec->capacity) {
+		if (vector_resize(vec, vec->capacity * 2) != 0) {
+			return -1;
+		}
+	}
+	
+	vec->item[vec->size++] = val;
+	
+	return 0;
+}
+
 void vector_get(vector_t *vec, int index);
 void vector_set(vector_t *vec, int index, void *value);
 void vector_delete(vector *vec, int index);
