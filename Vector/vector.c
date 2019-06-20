@@ -2,18 +2,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* initiate a vector only when it have not been initiated before */
 int vector_init(vector_t *vec)
-{
-	if(vec)
-		return;
+{	
+	if (!vec)
+		return -1;
 	
 	vec->size = 0;
 	vec->capacity = VECTOR_INIT_CAPACITY;
 	vec->items = malloc(sizeof(void*) * vec->capacity);
 	
 	if (!vec->items) {
-		fprintf(stderr, "vector_init malloc failed!");
+		printf("%s\n", "vector_init malloc failed!");
 		return -1;
 	}
 	
@@ -116,7 +115,7 @@ static int vector_resize(vector_t *vec, int capacity)
 	
 	void **items = realloc(vec->items, sizeof(void*) * capacity);
 	if (!items) {
-		fprintf(stderr, "vector_resize realloc failed!");
+		printf("%s", "vector_resize realloc failed!");
 		return -1;	
 	}
 	
