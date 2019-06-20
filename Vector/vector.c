@@ -10,9 +10,9 @@ int vector_init(vector_t *vec)
 	
 	vec->size = 0;
 	vec->capacity = VECTOR_INIT_CAPACITY;
-	vec->data = malloc(sizeof(void*) * vec->capacity);
+	vec->items = malloc(sizeof(void*) * vec->capacity);
 	
-	if (!vec->data) {
+	if (!vec->items) {
 		fprintf(stderr, "vector_init malloc failed!");
 		return -1;
 	}
@@ -39,10 +39,10 @@ int vector_capacity(vector_t *vec)
 }
 
 /* return 0 only if it succeed to add an element, otherwise should return -1 */
-int vector_add(vector_t *vec, void *val)
+int vector_add(vector_t *vec, void *item)
 {
 	if (!vec)
-		return -1
+		return -1;
 	
 	if (vec->size == vec->capacity) {
 		if (vector_resize(vec, vec->capacity * 2) != 0) {
@@ -50,19 +50,68 @@ int vector_add(vector_t *vec, void *val)
 		}
 	}
 	
-	vec->item[vec->size++] = val;
+	vec->items[vec->size++] = item;
 	
 	return 0;
 }
 
-void vector_get(vector_t *vec, int index);
-void vector_set(vector_t *vec, int index, void *value);
-void vector_delete(vector *vec, int index);
-void vector_free(vector_t *vec);
-
-static void vector_resize(vector_t *vec, int capacity)
+/* return the item of the vector[index] if it is valid or return NULL */
+void *vector_get(vector_t *vec, int index)
 {
-	if (!vec || capacity < 1)
+	if (vec && index >= 0 && index < vec->size) {
+		return vec->items[index];
+	}
+	return NULL;
+}
+
+/* return 0 if it set new value for the vector successfully, otherwise return -1 */
+int vector_set(vector_t *vec, int index, void *item)
+{
+	if (!vec || index >= vec->size || index < 0)
+		return -1;
+	
+	vec->items[index] = item;
+	
+	return 0;
+}
+
+/* return 0 if the value has been successfully deleted, else return -1 */
+int vector_delete(vector_t *vec, int index)
+{
+	if (!vec || index < 0 || index >= vec->size)
+		return -1;
+	
+	vec->items[index] = NULL;
+	
+	int idx = 0;
+	for( idx = index; idx < vec->size - 1 ; idx++) {
+		vec->items[idx] = vec->items[idx + 1];
+		vec->items[idx + 1] = NULL;
+	}
+	
+	vec->size--;
+	
+	if (vec->size > 0 && vec->size == vec->capacity / 4) {
+		if (vector_resize(vec, vec->capacity / 2) != 0) {
+			return -1;
+		}
+	}
+	
+	return 0;
+}
+
+/* only free the items of this vector pointer */
+void vector_free(vector_t *vec)
+{
+	if (!vec)
+		return;
+	
+	free(vec->items);
+}
+
+static int vector_resize(vector_t *vec, int capacity)
+{
+	if (!vec || capacity < 0)
 		return -1;
 	
 	void **items = realloc(vec->items, sizeof(void*) * capacity);
