@@ -31,7 +31,5 @@ int main(int argc, char **argv)
 
     vector_free(&v);
 	
-	system("pause");
-	
 	return 0;
 }
