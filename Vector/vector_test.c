@@ -4,12 +4,12 @@
 
 int main(int argc, char **argv)
 {
-	vector_t v;
-	vector_init(&v);
+    vector_t v;
+    vector_init(&v);
 	
-	int i = 0;
+    int i = 0;
 	
-	vector_add(&v, "Bonjour");
+    vector_add(&v, "Bonjour");
     vector_add(&v, "tout");
     vector_add(&v, "le");
     vector_add(&v, "monde");
