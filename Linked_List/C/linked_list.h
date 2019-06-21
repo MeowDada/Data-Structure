@@ -13,6 +13,7 @@ linked_list* list_insert_head(linked_list *list, void *item, size_t data_size);
 linked_list* list_insert_tail(linked_list *list, void *item, size_t data_size);
 linked_list* list_delete_head(linked_list *list);
 linked_list* list_delete_tail(linked_list *list);
+linked_list* list_clear(linked_list *list);
 linked_list* list_search(linked_list *list, void *item);
 linked_list* list_delete_node(linked_list *list, linked_list *target);
 linked_list* list_reverse(linked_list *list);

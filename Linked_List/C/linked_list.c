@@ -149,6 +149,22 @@ linked_list* list_delete_tail(linked_list *list)
 	return list;
 }
 
+linked_list* list_clear(linked_list* list)
+{
+	if (!list)
+		return NULL;
+	
+	linked_list *cur = list;
+	while (cur) {
+		linked_list *tmp = cur;
+		cur = cur->next;
+		free(tmp->item);
+		free(tmp);
+	}
+
+	return cur;
+}
+
 linked_list *list_reverse(linked_list *list)
 {
 	if (!list)
@@ -246,5 +262,5 @@ void _print_char(void *item)
 
 void _print_string(void *item)
 {
-	printf("%s ", *(char**)item);
+	printf("%s ", item);
 }

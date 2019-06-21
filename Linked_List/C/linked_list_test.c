@@ -3,8 +3,8 @@
 #include <string.h>
 #include "linked_list.h"
 
-#define PRINT_PER_LOOP  10000000
-#define TEST_LOOP_SIZE 100000000
+#define PRINT_PER_LOOP  1000000
+#define TEST_LOOP_SIZE 10000000
 
 int main(int argc, char **argv)
 {
@@ -64,6 +64,30 @@ int main(int argc, char **argv)
 	list = list_delete_tail(list);
 	list_print_all(list, _print_fptr[LIST_PRINT_INT]); // PRINT NOTHING
 	
+	/* Combine our list with different data type */
+	char *test_str = "Abner_win";
+	char *test_char = "c";
+	float num = 1.2345;
+	float *test_float = &num;
+	printf("sizeof(test_str) = %d\n", sizeof(test_str));
+	
+	list = list_insert_head(list, &arr[0], sizeof(int));
+	list_print_range(list, 0, 1, _print_fptr[LIST_PRINT_INT]);
+
+	list = list_insert_head(list, test_str, sizeof(char)*strlen(test_str));
+	list_print_range(list, 0, 1, _print_fptr[LIST_PRINT_STRING]);
+
+	list = list_insert_head(list, test_char, sizeof(char));
+	list_print_range(list, 0, 1, _print_fptr[LIST_PRINT_CHAR]);
+
+	list = list_insert_head(list, test_float, sizeof(float));
+	list_print_range(list, 0, 1, _print_fptr[LIST_PRINT_FLOAT]);
+	
+	list = list_delete_tail(list);
+	list = list_delete_head(list);
+	list = list_delete_head(list);
+	list = list_delete_tail(list);
+	
 	/* To check if there is any memory leak */
 	for (i = 0; i < TEST_LOOP_SIZE; i++) {
 		if ((i % PRINT_PER_LOOP)==0)
@@ -77,8 +101,17 @@ int main(int argc, char **argv)
 		list = list_delete_head(list);
 		list = list_delete_tail(list);
 	}
-	
-	system("pause");
+
+	for (i = 0; i < TEST_LOOP_SIZE; i++) {
+		if ((i % PRINT_PER_LOOP)==0)
+			printf("#Loop = %d\n", i);
+		list = list_insert_head(list, &arr[0], sizeof(int));
+		list = list_insert_head(list, &arr[1], sizeof(int));
+		list = list_insert_head(list, &arr[2], sizeof(int));
+		list = list_insert_head(list, &arr[3], sizeof(int));
+		list = list_clear(list);
+		// list_print_all(list, _print_fptr[LIST_PRINT_INT]);
+	}
 	
 	return 0;
 }
