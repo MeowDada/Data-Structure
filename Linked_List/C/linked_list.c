@@ -149,6 +149,27 @@ linked_list* list_delete_tail(linked_list *list)
 	return list;
 }
 
+linked_list *list_reverse(linked_list *list)
+{
+	if (!list)
+		return NULL;
+	
+	linked_list *head = list;
+	linked_list *cur = head;
+	linked_list *prev = NULL;
+	linked_list *next = list->next;
+	
+	while (cur->next) {
+		cur->next = prev;
+		prev = cur;
+		cur = next;
+		next = cur->next;
+	}
+	cur->next = prev;
+	
+	return cur;
+}
+
 void list_print_node(linked_list *node, void(*fptr)(void *item))
 {
 	if (!node || !fptr)

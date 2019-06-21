@@ -15,6 +15,7 @@ linked_list* list_delete_head(linked_list *list);
 linked_list* list_delete_tail(linked_list *list);
 linked_list* list_search(linked_list *list, void *item);
 linked_list* list_delete_node(linked_list *list, linked_list *target);
+linked_list* list_reverse(linked_list *list);
 
 void list_print_node(linked_list *node, void (*fptr)(void *item));
 void list_print_all(linked_list *list, void (*fptr)(void *item));
