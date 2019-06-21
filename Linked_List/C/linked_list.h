@@ -7,13 +7,18 @@ typedef struct linked_list {
 } linked_list;
 
 int list_count(linked_list *list);
-void list_insert_head(linked_list *list, void *item, size_t data_size);
+linked_list* list_get_node(linked_list *list, int index);
+
+linked_list* list_insert_head(linked_list *list, void *item, size_t data_size);
 linked_list* list_insert_tail(linked_list *list, void *item, size_t data_size);
 linked_list* list_delete_head(linked_list *list);
 linked_list* list_delete_tail(linked_list *list);
 linked_list* list_search(linked_list *list, void *item);
+linked_list* list_delete_node(linked_list *list, linked_list *target);
+
+void list_print_node(linked_list *node, void (*fptr)(void *item));
 void list_print_all(linked_list *list, void (*fptr)(void *item));
-void list_print_range(linked_list *list, void (*fptr)(void *item, int start, int end));
+void list_print_range(linked_list *list, int start, int end, void (*fptr)(void *item));
 
 /* define function to print specific data type */
 void _print_int(void *item);
