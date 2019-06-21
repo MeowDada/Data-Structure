@@ -23,13 +23,13 @@ void list_print_all(linked_list *list, void (*fptr)(void *item));
 void list_print_range(linked_list *list, int start, int end, void (*fptr)(void *item));
 
 /* define function to print specific data type */
-void _print_int(void *item);
-void _print_float(void *item);
-void _print_double(void *item);
-void _print_binary(void *item);
-void _print_hex(void *item);
-void _print_char(void *item);
-void _print_string(void *item);
+void list_print_int(void *item);
+void list_print_float(void *item);
+void list_print_double(void *item);
+void list_print_binary(void *item);
+void list_print_hex(void *item);
+void list_print_char(void *item);
+void list_print_string(void *item);
 
 enum list_print_type {
 	LIST_PRINT_INT,
@@ -41,14 +41,4 @@ enum list_print_type {
 	LIST_PRINT_STRING
 };
 
-static void *_print_fptr[] = {
-	_print_int,
-	_print_float,
-	_print_double,
-	_print_binary,
-	_print_hex,
-	_print_char,
-	_print_string 
-};
-
-#endif
+#endif /* _LINKED_LIST_H_ */

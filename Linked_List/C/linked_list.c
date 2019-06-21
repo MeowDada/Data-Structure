@@ -230,37 +230,37 @@ void list_print_range(linked_list *node, int start, int end, void (*fptr)(void *
 }
 
 /* print functions for specific type */
-void _print_int(void *item) 
+void list_print_int(void *item) 
 {
 	printf("%d ", *(int *)item);
 }
 
-void _print_float(void *item)
+void list_print_float(void *item)
 {
 	printf("%f ", *(float*)item);
 }
 
-void _print_double(void *item)
+void list_print_double(void *item)
 {
 	printf("%lf ", *(double*)item);
 }
 
-void _print_binary(void *item)
+void list_print_binary(void *item)
 {
 	printf("%b ", *(int*)item);
 }
 
-void _print_hex(void *item)
+void list_print_hex(void *item)
 {
 	printf("%04X ", *(int*)item);
 }
 
-void _print_char(void *item)
+void list_print_char(void *item)
 {
 	printf("%c ", *(char*)item);
 }
 
-void _print_string(void *item)
+void list_print_string(void *item)
 {
 	printf("%s ", item);
 }

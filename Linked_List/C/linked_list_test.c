@@ -14,23 +14,23 @@ int main(int argc, char **argv)
 	
 	for (i = 0; i < 5; i++)
 		list = list_insert_tail(list, &arr[i], sizeof(int));
-	
-	list_print_range(list, 0, 5, _print_fptr[LIST_PRINT_INT]);
-	list_print_range(list, 2, 4, _print_fptr[LIST_PRINT_INT]);
+
+	list_print_range(list, 0, 5, list_print_int);
+	list_print_range(list, 2, 4, list_print_int);
 	
 	/* Check for the basic operation is working fine*/
-	list_print_all(list, _print_fptr[LIST_PRINT_INT]); // 1 2 3 4 5
+	list_print_all(list, list_print_int); // 1 2 3 4 5
 	
 	list = list_delete_tail(list);
 	list = list_delete_head(list);
-	list_print_all(list, _print_fptr[LIST_PRINT_INT]); // 2 3 4
+	list_print_all(list, list_print_int); // 2 3 4
 	
 	list = list_delete_tail(list);
 	list = list_delete_tail(list);
-	list_print_all(list, _print_fptr[LIST_PRINT_INT]); // 2
+	list_print_all(list, list_print_int); // 2
 	
 	list = list_delete_tail(list);
-	list_print_all(list, _print_fptr[LIST_PRINT_INT]); // PRINT NOTHING
+	list_print_all(list, list_print_int); // PRINT NOTHING
 	
 	/* Check what will happend if we delete a Null linked list */ 
 	list = list_delete_tail(list);
@@ -43,26 +43,26 @@ int main(int argc, char **argv)
 	/* Test utility 'reverse' */
 	list = list_insert_head(list, &arr[4], sizeof(int));
 	list = list_reverse(list);
-	list_print_all(list, _print_fptr[LIST_PRINT_INT]); // 5
+	list_print_all(list, list_print_int); // 5
 	
 	list = list_insert_head(list, &arr[3], sizeof(int));
 	list = list_insert_head(list, &arr[2], sizeof(int));
 	list = list_insert_head(list, &arr[1], sizeof(int));
 	list = list_insert_head(list, &arr[0], sizeof(int));
-	list_print_all(list, _print_fptr[LIST_PRINT_INT]); // 1 2 3 4 5
+	list_print_all(list, list_print_int); // 1 2 3 4 5
 	
 	list = list_reverse(list);
-	list_print_all(list, _print_fptr[LIST_PRINT_INT]); // 5 4 3 2 1
+	list_print_all(list, list_print_int); // 5 4 3 2 1
 	
 	list = list_delete_tail(list);
 	list = list_delete_head(list);
 	list = list_delete_head(list);
 	list = list_delete_tail(list);
 	list = list_reverse(list);
-	list_print_all(list, _print_fptr[LIST_PRINT_INT]); // 3
+	list_print_all(list, list_print_int); // 3
 	
 	list = list_delete_tail(list);
-	list_print_all(list, _print_fptr[LIST_PRINT_INT]); // PRINT NOTHING
+	list_print_all(list, list_print_int); // PRINT NOTHING
 	
 	/* Combine our list with different data type */
 	char *test_str = "Abner_win";
@@ -72,16 +72,16 @@ int main(int argc, char **argv)
 	printf("sizeof(test_str) = %d\n", sizeof(test_str));
 	
 	list = list_insert_head(list, &arr[0], sizeof(int));
-	list_print_range(list, 0, 1, _print_fptr[LIST_PRINT_INT]);
+	list_print_range(list, 0, 1, list_print_int);
 
 	list = list_insert_head(list, test_str, sizeof(char)*strlen(test_str));
-	list_print_range(list, 0, 1, _print_fptr[LIST_PRINT_STRING]);
+	list_print_range(list, 0, 1, list_print_string);
 
 	list = list_insert_head(list, test_char, sizeof(char));
-	list_print_range(list, 0, 1, _print_fptr[LIST_PRINT_CHAR]);
+	list_print_range(list, 0, 1, list_print_char);
 
 	list = list_insert_head(list, test_float, sizeof(float));
-	list_print_range(list, 0, 1, _print_fptr[LIST_PRINT_FLOAT]);
+	list_print_range(list, 0, 1, list_print_float);
 	
 	list = list_delete_tail(list);
 	list = list_delete_head(list);
