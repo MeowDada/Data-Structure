@@ -1,11 +1,7 @@
-#ifndef _VECTOR_H_
-#define _VECTOR_H_
+#ifndef VECTOR_H
+#define VECTOR_H
 
 #define VECTOR_INIT_CAPACITY 1
-#define QSORT_THRESHOLD 20		
-/* when elements number is larger than 20, 
- * use qsort for sorting,
- * otherwise use insertion sort */
  
 typedef struct vector_t {
 	int size;
