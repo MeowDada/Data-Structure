@@ -1,5 +1,5 @@
-#ifndef _LINKED_LIST_H_
-#define _LINKED_LIST_H_ 
+#ifndef LINKED_LIST_H
+#define LINKED_LIST_H
 
 typedef struct linked_list {
 	void *item;
