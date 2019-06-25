@@ -20,6 +20,7 @@ typedef struct stack_impl_fn_table {
     int (*stack_isempty)(stack *s);
     int (*stack_size)(stack *s);
     int (*stack_capacity)(stack *s);
+    void (*stack_destroy)(stack *s);
 } stack_impl_fn_table;
 
 typedef struct stack_impl {
@@ -51,6 +52,7 @@ int _stack_impl_array_isfull(stack *s);
 int _stack_impl_array_isempty(stack *s);
 int _stack_impl_array_size(stack *s);
 int _stack_impl_array_capacity(stack *s);
+void _stack_impl_array_destroy(stack *s);
 
 typedef struct stack_impl_vector {
     stack_impl stack_impl;
@@ -60,6 +62,17 @@ typedef struct stack_impl_vector_fn_table {
     stack_impl_fn_table base;
 } stack_impl_vector_fn_table;
 
+void _stack_impl_vector_init(stack *s);
+void _stack_impl_vector_push(stack *s, void *item);
+void *_stack_impl_vector_pop(stack *s);
+void *_stack_impl_vector_top(stack *s);
+void _stack_impl_vector_clear(stack *s);
+int _stack_impl_vector_isfull(stack *s);
+int _stack_impl_vector_isempty(stack *s);
+int _stack_impl_vector_size(stack *s);
+int _stack_impl_vector_capacity(stack *s);
+void _stack_impl_vector_destroy(stack *s);
+
 void stack_init(stack *s, stack_impl_type type, int size_member);
 void stack_push(stack *s, void *item);
 void *stack_pop(stack *s);
@@ -68,7 +81,8 @@ void stack_clear(stack *s);
 int stack_isfull(stack *s);
 int stack_isempty(stack *s);
 int stack_size(stack *s);
-int stack_capacity(stack *s); 
+int stack_capacity(stack *s);
+void stack_destroy(stack *s);
 
 void stack_impl_init(stack_impl **s);
 
