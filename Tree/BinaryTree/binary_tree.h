@@ -7,7 +7,7 @@ typedef struct binary_tree_node {
     void *data;
 } binary_tree_node;
 
-binary_tree_node *create_binary_tree_node(void* data);
+binary_tree_node *create_binary_tree_node(void* data, int size);
 int is_binary_tree_empty(binary_tree_node *node);
 binary_tree_node *get_left_binary_tree(binary_tree_node *node);
 binary_tree_node *get_right_binary_tree(binary_tree_node *node);
