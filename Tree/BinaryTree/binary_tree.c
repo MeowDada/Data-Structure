@@ -3,11 +3,13 @@
 
 #include "binary_tree.h"
 
-/* Note: Able to create a node with value NULL */
 binary_tree_node *create_binary_tree_node(void* data, int size)
 {
+    if (!data || size < 0)
+        return NULL;
+
     binary_tree_node *node = (binary_tree_node*)malloc(sizeof(binary_tree_node));
-    if (!node || size < 0)
+    if (!node)
         return NULL;
     
     node->left = NULL;
@@ -17,7 +19,7 @@ binary_tree_node *create_binary_tree_node(void* data, int size)
         free(node);
         return NULL;
     }
-    memset(node->data, data, size);
+    memcpy(node->data, data, size);
 
     return node;
 }
@@ -43,6 +45,16 @@ binary_tree_node *get_right_binary_tree(binary_tree_node *node)
     return node->right;
 }
 
-void *get_binary_tree_node_data(binary_tree_node *node);
-void print_binary_tree_node(binary_tree_node* node, void (*print_func)
-(binary_tree_node*));
+void *get_binary_tree_node_data(binary_tree_node *node)
+{
+    if (!node)
+        return NULL;
+    
+    return node->data;
+}
+
+void print_binary_tree_node(binary_tree_node* node, 
+                            void (*print_func)(binary_tree_node*))
+{
+    (*print_func)(node);
+}

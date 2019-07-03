@@ -2,8 +2,8 @@
 #define BINARY_TREE_H
 
 typedef struct binary_tree_node {
-    binary_tree_node *left;
-    binary_tree_node *right;
+    struct binary_tree_node *left;
+    struct binary_tree_node *right;
     void *data;
 } binary_tree_node;
 
