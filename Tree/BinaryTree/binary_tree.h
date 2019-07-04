@@ -19,8 +19,8 @@ binary_tree_node *get_left_binary_tree(binary_tree_node *node);
 binary_tree_node *get_right_binary_tree(binary_tree_node *node);
 void *get_binary_tree_node_data(binary_tree_node *node);
 void print_binary_tree_node(binary_tree_node *node, void (*print_func)(binary_tree_node*));
-void destroy_binary_tree_node(binary_tree_node *node);
-void destroy_binary_tree_recursively(binary_tree_node *root);
+void destroy_binary_tree_node(binary_tree_node **node);
+void destroy_binary_tree_recursively(binary_tree_node **root);
 int get_binary_tree_depth(binary_tree_node *root);
 int get_binary_tree_node_count(binary_tree_node *root);
 void traversal_binary_tree(binary_tree_node *root, 

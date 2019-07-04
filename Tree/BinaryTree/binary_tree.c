@@ -61,30 +61,39 @@ void *get_binary_tree_node_data(binary_tree_node *node)
 void print_binary_tree_node(binary_tree_node *node, 
                             void (*print_func)(binary_tree_node*))
 {
+    if (!node) {
+        fprintf(stderr, "In binary_tree.c:\n");
+        fprintf(stderr, "[print_binary_tree_node] Cannot print NULL node\n");
+        return;
+    }
+    
     (*print_func)(node);
 }
 
-void destroy_binary_tree_node(binary_tree_node *node)
+void destroy_binary_tree_node(binary_tree_node **node)
 {
-    if (!node)
+    if (!node || !(*node))
         return;
+
+    binary_tree_node *tmp = *node;
     
-    node->left = NULL;
-    node->right = NULL;
-    free(node->data);
-    free(node);
+    tmp->left = NULL;
+    tmp->right = NULL;
+    free(tmp->data);
+    free(tmp);
+    *node = NULL;
 }
 
-void destroy_binary_tree_recursively(binary_tree_node *node)
+void destroy_binary_tree_recursively(binary_tree_node **node)
 {
-    if (!node)
+    if (!node || !(*node))
         return;
     
-    if (node->left)
-        destroy_binary_tree_recursively(node->left);
+    if ((*node)->left)
+        destroy_binary_tree_recursively(&((*node)->left));
     
-    if (node->right)
-        destroy_binary_tree_recursively(node->right);
+    if ((*node)->right)
+        destroy_binary_tree_recursively(&((*node)->right));
     
     destroy_binary_tree_node(node);
 }
@@ -152,5 +161,11 @@ void traversal_binary_tree(binary_tree_node *root,
                            void (*print_func)(binary_tree_node*), 
                            binary_tree_traversal_mode mode)
 {
+    if (!root) {
+        fprintf(stderr, "In binary_tree.c:\n");
+        fprintf(stderr, "[traversal_binary_tree] Cannot traversal from NULL root\n");
+        return;
+    }
+    
     (*binary_tree_traversal_func[mode])(root, print_func);
 }

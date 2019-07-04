@@ -1,0 +1,5 @@
+# ignore Visual Studio Code config files
+*.vscode
+
+# ignore executable files built on Windows
+*.exe
