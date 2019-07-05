@@ -100,13 +100,17 @@ int vector_delete(vector_t *vec, int index)
 	return 0;
 }
 
-/* only free the items of this vector pointer */
-void vector_free(vector_t *vec)
+void vector_free(vector_t **vec)
 {
 	if (!vec)
 		return;
 	
-	free(vec->items);
+	int i = 0;
+	for(i = 0; i < (*vec)->size; i++)
+		(*vec)->items[i] = NULL;
+	
+	free((*vec)->items);
+	vec = NULL;
 }
 
 void vector_reverse(vector_t *vec)
