@@ -17,11 +17,15 @@
                 ],
                 "options": {
                     "cwd": "C:\\MinGW\\bin"
-                },
+                }
             },
             "problemMatcher": [
                 "$gcc"
-            ]
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }

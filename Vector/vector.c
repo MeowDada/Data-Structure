@@ -13,7 +13,7 @@ int vector_init(vector_t *vec)
 	vec->items = malloc(sizeof(void*) * vec->capacity);
 	
 	if (!vec->items) {
-		printf("%s\n", "vector_init malloc failed!");
+		fprintf(stderr, "%s\n", "vector_init malloc failed!");
 		return -1;
 	}
 	

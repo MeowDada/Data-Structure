@@ -17,29 +17,37 @@ void stack_impl_init(stack_impl **s)
     (*s)->fn_table = (stack_impl_fn_table*)malloc(sizeof(stack_impl_fn_table));
     if (!((*s)->fn_table))
         free(*s);
+    
     return;
 }
 
-void stack_impl_by_array_init(stack *s, int size_member)
+static void stack_impl_by_array_init(stack **s, int size_member)
 {
     if (!s)
         return;
-    
-    s->size = 0;
-    s->capacity = MAX_STACK_SIZE;
-    s->size_member = size_member;
-    s->data = (void*)malloc(size_member * s->capacity);
 
-    stack_impl_init(&s->stack_impl);
-    s->stack_impl->fn_table->stack_init = _stack_impl_array_init;
-    s->stack_impl->fn_table->stack_push = _stack_impl_array_push;
-    s->stack_impl->fn_table->stack_pop = _stack_impl_array_pop;
-    s->stack_impl->fn_table->stack_top = _stack_impl_array_top;
-    s->stack_impl->fn_table->stack_isfull = _stack_impl_array_isfull;
-    s->stack_impl->fn_table->stack_isempty = _stack_impl_array_isempty;
-    s->stack_impl->fn_table->stack_clear = _stack_impl_array_clear;
-    s->stack_impl->fn_table->stack_size = _stack_impl_array_size;
-    s->stack_impl->fn_table->stack_capacity = _stack_impl_array_capacity;
+    stack *tmp = (stack*)malloc(sizeof(stack));
+    *s = tmp;
+
+    if (!(*s))
+        return;
+    
+    (*s)->size = 0;
+    (*s)->capacity = MAX_STACK_SIZE;
+    (*s)->size_member = size_member;
+    (*s)->data = (void*)malloc(size_member * (*s)->capacity);
+
+    stack_impl_init(&((*s)->stack_impl));
+    (*s)->stack_impl->fn_table->stack_init = _stack_impl_array_init;
+    (*s)->stack_impl->fn_table->stack_push = _stack_impl_array_push;
+    (*s)->stack_impl->fn_table->stack_pop = _stack_impl_array_pop;
+    (*s)->stack_impl->fn_table->stack_top = _stack_impl_array_top;
+    (*s)->stack_impl->fn_table->stack_isfull = _stack_impl_array_isfull;
+    (*s)->stack_impl->fn_table->stack_isempty = _stack_impl_array_isempty;
+    (*s)->stack_impl->fn_table->stack_clear = _stack_impl_array_clear;
+    (*s)->stack_impl->fn_table->stack_size = _stack_impl_array_size;
+    (*s)->stack_impl->fn_table->stack_capacity = _stack_impl_array_capacity;
+    (*s)->stack_impl->fn_table->stack_destroy = _stack_impl_array_destroy;
 }
 
 /* Just a placeholder function */
@@ -117,43 +125,52 @@ int _stack_impl_array_capacity(stack *s)
     return s->capacity;
 }
 
-void _stack_impl_array_destroy(stack *s)
+void _stack_impl_array_destroy(stack **s)
 {
     if (!s)
         return;
     
-    free(s->stack_impl->fn_table);
-    free(s->stack_impl);
-    free(s->data);
-    s->size = 0;
-    s->capacity = 0;
-    s->size_member = 0;
+    free((*s)->stack_impl->fn_table);
+    free((*s)->stack_impl);
+    free((*s)->data);
+    free((*s));
+    s = NULL;
 }
 
-void stack_impl_by_vector_init(stack *s, int size_number)
+void stack_impl_by_vector_init(stack **s, int size_number)
 {
     if (!s)
         return;
 
+    stack *tmp = (stack*)malloc(sizeof(stack));
+    if (!tmp)
+        return;
+    
+    *s = tmp;
+
     vector_t *vec = (vector_t*)malloc(sizeof(vector_t));
+    if (!vec) {
+        free(tmp);
+        return;
+    }
     vector_init(vec);
 
-    s->size = 0;
-    s->capacity = vector_capacity(vec);
-    s->data = vec;
-    s->size_member = -1;
+    (*s)->size = 0;
+    (*s)->capacity = vector_capacity(vec);
+    (*s)->data = vec;
+    (*s)->size_member = -1;
 
-    stack_impl_init(&s->stack_impl);
-    s->stack_impl->fn_table->stack_init = _stack_impl_vector_init;
-    s->stack_impl->fn_table->stack_push = _stack_impl_vector_push;
-    s->stack_impl->fn_table->stack_pop = _stack_impl_vector_pop;
-    s->stack_impl->fn_table->stack_top = _stack_impl_vector_top;
-    s->stack_impl->fn_table->stack_clear = _stack_impl_vector_clear;
-    s->stack_impl->fn_table->stack_isfull = _stack_impl_vector_isfull;
-    s->stack_impl->fn_table->stack_isempty = _stack_impl_vector_isempty;
-    s->stack_impl->fn_table->stack_size = _stack_impl_vector_size;
-    s->stack_impl->fn_table->stack_capacity = _stack_impl_vector_capacity;
-    s->stack_impl->fn_table->stack_destroy = _stack_impl_vector_destroy;
+    stack_impl_init(&((*s)->stack_impl));
+    (*s)->stack_impl->fn_table->stack_init = _stack_impl_vector_init;
+    (*s)->stack_impl->fn_table->stack_push = _stack_impl_vector_push;
+    (*s)->stack_impl->fn_table->stack_pop = _stack_impl_vector_pop;
+    (*s)->stack_impl->fn_table->stack_top = _stack_impl_vector_top;
+    (*s)->stack_impl->fn_table->stack_clear = _stack_impl_vector_clear;
+    (*s)->stack_impl->fn_table->stack_isfull = _stack_impl_vector_isfull;
+    (*s)->stack_impl->fn_table->stack_isempty = _stack_impl_vector_isempty;
+    (*s)->stack_impl->fn_table->stack_size = _stack_impl_vector_size;
+    (*s)->stack_impl->fn_table->stack_capacity = _stack_impl_vector_capacity;
+    (*s)->stack_impl->fn_table->stack_destroy = _stack_impl_vector_destroy;
 }
 
 void _stack_impl_vector_init(stack *s)
@@ -206,7 +223,7 @@ void _stack_impl_vector_clear(stack *s)
     if (!s)
         return;
 
-    vector_clear(s->data);
+    vector_free(s->data);
     s->size = vector_size(s->data);
 }
 
@@ -242,27 +259,26 @@ int _stack_impl_vector_capacity(stack *s)
     return s->capacity;
 }
 
-void _stack_impl_vector_destroy(stack *s)
+void _stack_impl_vector_destroy(stack **s)
 {
     if (!s)
         return;
     
-    free(s->stack_impl->fn_table);
-    free(s->stack_impl);
-    vector_free(s->data);
-    s->size = 0;
-    s->capacity = 0;
-    s->size_member = 0;
+    free((*s)->stack_impl->fn_table);
+    free((*s)->stack_impl);
+    vector_free((vector_t**)&((*s)->data));
+    free((*s));
+    s = NULL;
 }
 
 /* Function pointers for determining which kinds of implementations is adapted */
-static void (*stack_impl_fptr[])(stack* s, int size_member) = {
+static void (*stack_impl_fptr[])(stack **s, int size_member) = {
     stack_impl_by_array_init,
     stack_impl_by_vector_init
 };
 
 /* Operations */
-void stack_init(stack *s, stack_impl_type type, int size_member)
+void stack_init(stack **s, stack_impl_type type, int size_member)
 {
     (*stack_impl_fptr[type])(s, size_member);
 }
@@ -305,4 +321,9 @@ int stack_size(stack *s)
 int stack_capacity(stack *s)
 {
     return (*s->stack_impl->fn_table->stack_capacity)(s);
+}
+
+void stack_destroy(stack **s)
+{
+    return (*(*s)->stack_impl->fn_table->stack_destroy)(s);
 }
