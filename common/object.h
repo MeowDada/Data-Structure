@@ -23,11 +23,12 @@ void object_destroy(object_t **obj);
 int object_equal(object_t *src, object_t *tar);
 void object_print(object_t *obj);
 const char *object_to_string(object_t *obj);
-void object_set_content(object_t *obj, void *data, size_t size);
-static inline void object_set_equal_func(object_t *obj, int (*equal_func)(void*));
-static inline void object_set_to_string_func(object_t *obj, const char *(*to_string_func)(void*));
-static inline void object_set_print_func(object_t *obj, void (*print_func)(void*));
-static inline void object_set_destructor(object_t *obj, void (*destructor)(void*));
+void object_clear_content(object_t *obj);
+int object_set_content(object_t *obj, void *data, size_t size);
+void object_set_equal_func(object_t *obj, int (*equal_func)(void*));
+void object_set_to_string_func(object_t *obj, const char *(*to_string_func)(void*));
+void object_set_print_func(object_t *obj, void (*print_func)(void*));
+void object_set_destructor(object_t *obj, void (*destructor)(void*));
                                     
 
 #endif /* OBJECT_H */
