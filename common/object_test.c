@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "object.h"
 
 #define TEST_OBJECT_LOOP 100000
