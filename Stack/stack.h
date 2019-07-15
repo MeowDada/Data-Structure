@@ -12,7 +12,7 @@ typedef enum stack_impl_type {
 
 typedef struct stack_impl_fn_table {
     void (*stack_init)(stack *s);
-    void (*stack_push)(stack *s, void *item);
+    void (*stack_push)(stack *s, void *item, size_t size);
     void *(*stack_pop)(stack *s);
     void *(*stack_top)(stack *s);
     void (*stack_clear)(stack *s);
@@ -44,7 +44,7 @@ typedef struct stack_impl_array_fn_table {
 } stack_impl_array_fn_table;
 
 void _stack_impl_array_init(stack *s);
-void _stack_impl_array_push(stack *s, void *item);
+void _stack_impl_array_push(stack *s, void *item, size_t size);
 void *_stack_impl_array_pop(stack *s);
 void *_stack_impl_array_top(stack *s);
 void _stack_impl_array_clear(stack *s);
@@ -63,7 +63,7 @@ typedef struct stack_impl_vector_fn_table {
 } stack_impl_vector_fn_table;
 
 void _stack_impl_vector_init(stack *s);
-void _stack_impl_vector_push(stack *s, void *item);
+void _stack_impl_vector_push(stack *s, void *item, size_t size);
 void *_stack_impl_vector_pop(stack *s);
 void *_stack_impl_vector_top(stack *s);
 void _stack_impl_vector_clear(stack *s);
@@ -74,7 +74,7 @@ int _stack_impl_vector_capacity(stack *s);
 void _stack_impl_vector_destroy(stack **s);
 
 void stack_init(stack **s, stack_impl_type type, int size_member);
-void stack_push(stack *s, void *item);
+void stack_push(stack *s, void *item, size_t size);
 void *stack_pop(stack *s);
 void *stack_top(stack *s);
 void stack_clear(stack *s);

@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <memory.h>
+
 #include "object.h"
 
 static inline void reset_object_funcptr(object_t *obj)
@@ -25,14 +29,16 @@ static inline void object_funcptr_set_by_other_object(object_t *src, object_t *t
 /* Create & Destroy operation */
 object_t *object_create(void *data, size_t size)
 {
-    if (!data || size < 0) {
+    if (size < 0) {
         fprintf(stderr, "[object_create] Cannot create a object with NULL pointer or size < 0!\n");
         return NULL;
     }
 
     object_t *obj = (object_t*)malloc(sizeof(object_t));
-    if (!obj)
+    if (!obj) {
+        fprintf(stderr, "[object_create] Failed to allocate memory for creating new object_t!\n");
         return NULL;
+    }
 
     obj->content = malloc(size);
     if (!obj->content) {
@@ -40,7 +46,13 @@ object_t *object_create(void *data, size_t size)
         return NULL;
     }
 
-    memcpy(obj->content, data, size);
+    if (data) {
+        memcpy(obj->content, data, size);
+        obj->_has_set_value = 1;
+    }
+    else
+        obj->_has_set_value = 0;
+    
     obj->size = size;
     reset_object_funcptr(obj);
 
@@ -55,32 +67,45 @@ object_t *object_copy(object_t *src)
     object_t *copy = object_create(src->content, src->size);
     if (!copy)
         return NULL;
+    copy->_has_set_value = src->_has_set_value;
     
     object_funcptr_set_by_other_object(copy, src);
 
     return copy;
 }
 
-void object_destroy(object_t **obj)
+void object_destroy(object_t *obj)
 {
     if (!obj) {
         fprintf(stderr, "[object_destroy] No need to destroy a NULL pointer\n");
         return;
     }
     
-    // Call the corresponding destructor of the content if it exist
-    if ((*obj)->content_destructor)
-        (*(*obj)->content_destructor)((*obj)->content);
-    else {
-        free((*obj)->content);
-        (*obj)->content = NULL;
+    if (!obj->content) {
+        obj->_has_set_value = 0;
+        free(obj);
+        return;
     }
 
-    free(*obj);
-    *obj = NULL;
+    // Call the corresponding destructor of the content if it exist
+    if (obj->content_destructor)
+        (obj->content_destructor)(obj->content);
+    else
+        free(obj->content);
+    
+    obj->content = NULL;
+    obj->_has_set_value = 0;
+    free(obj);
 }
 
 /* Utilites */
+int object_has_set_value(object_t *obj)
+{
+    if (!obj)
+        return 0;
+    return (obj->_has_set_value==0)? 0 : 1;
+}
+
 int object_equal(object_t *src, object_t *tar)
 {
     if (!src && !tar)
@@ -112,18 +137,20 @@ const char *object_to_string(object_t *obj)
     return (*obj->to_string_func)(obj->content);
 }
 
+// This function will only clear the value of the object instead of destroying it
 void object_clear_content(object_t *obj)
 {
     if (!obj) {
         fprintf(stderr, "[object_clear_content] Wont do anything with a null pointer input.\n");
         return;
     }
-    
-    if(obj->content_destructor)
+
+    if(obj->content_destructor) {
         (*obj->content_destructor);
+        obj->_has_set_value = 0;
+    }
     else {
-        free(obj->content);
-        obj->content = NULL;
+        obj->_has_set_value = 0;
         reset_object_funcptr(obj);
     }
 }
@@ -147,12 +174,14 @@ int object_set_content(object_t *obj, void *data, size_t size)
             return 0;
         }
     }
-    else if(!obj->content)
+    else if (!obj->content) {
         obj->content = malloc(size);
+    }
 
     if (obj->content) {
         memcpy(obj->content, data, size);
         obj->size = size;
+        obj->_has_set_value = 1;
     }
     else {
         fprintf(stderr, "[object_set_content] Object content has no memory assigned!\n");

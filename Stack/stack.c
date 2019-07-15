@@ -56,7 +56,7 @@ void _stack_impl_array_init(stack *s)
 
 }
 
-void _stack_impl_array_push(stack *s, void *item)
+void _stack_impl_array_push(stack *s, void *item, size_t size)
 {
     if (!s || !item || s->size >= s->capacity)
         return;
@@ -149,10 +149,6 @@ void stack_impl_by_vector_init(stack **s, int size_number)
     *s = tmp;
 
     vector_t *vec = (vector_t*)malloc(sizeof(vector_t));
-    if (!vec) {
-        free(tmp);
-        return;
-    }
     vector_init(vec);
 
     (*s)->size = 0;
@@ -178,18 +174,13 @@ void _stack_impl_vector_init(stack *s)
 
 }
 
-void _stack_impl_vector_push(stack *s, void *item)
+void _stack_impl_vector_push(stack *s, void *item, size_t size)
 {
     if (!s || !item)
         return;
-
-    if (s->size == s->capacity) {
-        vector_add(s->data, item);
-        s->capacity = vector_capacity(s->data);
-    }
-    else
-        vector_add(s->data, item);
     
+    vector_add(s->data, item, size);
+    s->capacity = vector_capacity(s->data);
     s->size = vector_size(s->data);
 }
 
@@ -198,22 +189,22 @@ void *_stack_impl_vector_pop(stack *s)
     if (!s || s->size<=0)
         return NULL;
     
-    void* top = vector_get(s->data, s->size-1);
+    void *top = vector_pop(s->data, s->size-1);
     if (!top)
         return NULL;
+    
+    s->size = vector_size(s->data);
+    s->capacity = vector_capacity(s->data);
 
-    if (vector_delete(s->data, vector_size(s->data)-1)==0) {
-        s->size = vector_size(s->data);
-        s->capacity = vector_capacity(s->data);
-        return top;
-    }
-    return NULL;
+    return top;
 }
 
 void *_stack_impl_vector_top(stack *s)
 {
-    if (!s)
+    if (!s) {
+        fprintf(stderr, "Cannot get element from NULL stack pointer");
         return NULL;
+    }
     
     return vector_get(s->data, s->size-1);
 }
@@ -223,7 +214,7 @@ void _stack_impl_vector_clear(stack *s)
     if (!s)
         return;
 
-    vector_free(s->data);
+    vector_clear(s->data);
     s->size = vector_size(s->data);
 }
 
@@ -266,7 +257,10 @@ void _stack_impl_vector_destroy(stack **s)
     
     free((*s)->stack_impl->fn_table);
     free((*s)->stack_impl);
-    vector_free((vector_t**)&((*s)->data));
+
+    vector_t *vec = (*s)->data;
+
+    vector_free(&vec);
     free((*s));
     s = NULL;
 }
@@ -283,9 +277,9 @@ void stack_init(stack **s, stack_impl_type type, int size_member)
     (*stack_impl_fptr[type])(s, size_member);
 }
 
-void stack_push(stack *s, void *item)
+void stack_push(stack *s, void *item, size_t size)
 {
-    (*s->stack_impl->fn_table->stack_push)(s, item);
+    (*s->stack_impl->fn_table->stack_push)(s, item, size);
 }
 
 void *stack_pop(stack *s)
