@@ -70,21 +70,19 @@ int main(int argc, char **argv)
         value_arr[i] = i;
 
     for ( i = 0; i < TEST_OBJECT_LOOP; i++) {
-        object_t *arr = (object_t*)malloc(sizeof(object_t)*TEST_OBJECT_ARRAY_SIZE);
+        object_t **arr = (object_t**)malloc(sizeof(object_t*)*TEST_OBJECT_ARRAY_SIZE);
         int j = 0;
+        for (j = 0; j < TEST_OBJECT_ARRAY_SIZE; j++)
+            arr[j] = object_create(&value_arr[j] ,sizeof(int));
+        
         for (j = 0; j < TEST_OBJECT_ARRAY_SIZE; j++) {
-            object_t *obj = object_create(&value_arr[j] ,sizeof(int));
-            memcpy(&arr[j], obj, sizeof(object_t));
-            free(obj);
+            object_destroy(arr[j]);
+            arr[j] = NULL;
         }
-        for (j = 0; j < TEST_OBJECT_ARRAY_SIZE; j++) {
-            object_t *tmp = &arr[j];
-            object_destroy(tmp);
-        }
+        
         free(arr);
-        if (i % TEST_PRINT_PER_LOOP == 0) {
+        if (i % TEST_PRINT_PER_LOOP == 0)
             fprintf(stdout, "#Loop = %d\n", i);
-        }
     }
     
 
