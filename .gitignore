@@ -1,6 +1,9 @@
 # ignore Visual Studio Code config files
-*.vscode
+*.code-workspace
 *.json
 
 # ignore executable files built on Windows
 *.exe
+
+# ignore object files
+/src/vector/*.o
