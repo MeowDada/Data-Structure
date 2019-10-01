@@ -2,44 +2,38 @@
 
 using namespace meowdada;
 
+vector<int> return_rvalue(vector<int> temp)
+{
+    return temp;
+}
+
 int main()
 {
-    vector<int> vec = vector<int>();
-    vec.push_front(1);
-    vec.dump();
-    vec.push_back(2);
-    vec.dump();
-    vec.push_front(3);
-    vec.dump();
-    vec.push_back(4);
-    vec.dump();
-    vec.push_back(5);
-    vec.dump();
-    vec.push_back(6);
-    vec.dump();
-    vec.pop_front();
-    vec.dump();
-    vec.pop_front();
-    vec.dump();
-    vec.pop_back();
-    vec.dump();
-    vec.pop_back();
-    vec.dump();
-    vec.push_back(3);
-    vec.dump();
-    vec.push_back(4);
-    vec.push_back(2);
-    vec.push_back(3);
-    vec.push_back(5);
-    vec.push_back(3);
+    vector<int> vec1 { 1, 2, 3 };           // constructed by initializer_list
+    vector<int> vec2 ( { 1, 2, 3, 4} );     // constructed by initializer_list
+    vector<int> vec3 = { 1, 2, 3 };         // constructed by initializer_list
+    vector<int> vec4 = vec1;                // copy constructor
+    vector<int> vec5(vec2);                 // copy constructor
+    vector<int> vec6(std::move(vec3));      // move constructor
 
-    std::sort(vec.begin(), vec.end());
+    vector<int> vec = { 1, 2, 3, 4, 5, 6 };
+    vec.dump();
+    vec.push_back(5);     // { 1, 2, 3, 4, 5 ,6 ,5 }
+    vec.push_back(6);     // { 1, 2, 3, 4, 5, 6, 5, 6 }
+    vec.push_front(-2);   // { -2, 1, 2, 3, 4, 5, 6, 5, 6 }
+    vec.push_front(-6);   // { -6, -2, 1, 2, 3, 4, 5, 6, 5, 6 }
+    vec.dump();
 
-    auto print = [](const int& val) { std::cout << " " << val; };
-    std::for_each(vec.begin(), vec.end(), print);
-    std::cout << std::endl;
+    vec.pop_front();      // { -2, 1, 2, 3, 4, 5, 6, 5, 6 }
+    vec.pop_front();      // { 1, 2, 3, 4, 5, 6, 5, 6 }
+    vec.pop_back();       // { 1, 2, 3, 4, 5, 6, 5 }
+    vec.pop_front();      // { 2, 3, 4, 5, 6, 5 }
+    vec.dump();
 
-    std::cout << vec[2] << std::endl;
+    std::sort(vec.begin(), vec.end());  // { 2, 3, 4, 5, 5, 6 }
+    vec.dump();
+
+    std::cout << "vec[3] = " << vec[3] << std::endl;  // vec[3] = 5
 
     return 0;
 }

@@ -24,17 +24,28 @@ namespace meowdada
                 std::cout << "default constructor" << std::endl;
             }
 
+            vector(const std::initializer_list<T>&& list)
+            : size(0), capacity(DS_VECTOR_DEFAULT_CAPACITY), elements(new T[capacity])
+            {
+                std::cout << "construct by initializer_list" << std::endl;
+
+                for (const T& element : list)
+                    push_back(element);
+            }
+
             vector(const vector<T>& other)
             : size(other.size), capacity(other.capacity), elements(new T[capacity])
             {
-                std::cout << "construct by other vector" << std::endl;
+                std::cout << "copy constructor" << std::endl;
 
                 std::copy(other.elements, other.elements + other.size, elements);
             }
 
             vector(vector<T>&& other)
+            : size(other.size), capacity(other.capacity), elements(other.elements)
             {
-                
+                std::cout << "move constructor" << std::endl;
+                other.elements = nullptr;
             }
 
             vector& operator=(vector<T> other)
@@ -47,6 +58,8 @@ namespace meowdada
 
             vector& operator=(const vector<T>& other)
             {
+                std::cout << "A\n";
+
                 if (this == &other) return *this;
                 delete[] elements;
                 elements = new T[other.capacity];
@@ -56,7 +69,24 @@ namespace meowdada
                 return *this;
             }
 
-            vector& operator=(vector<T>&& other);
+            vector& operator=(vector<T>&& other)
+            {
+                std::cout << "move assignment\n";
+
+                if (this != &other)
+                {
+                    // free the existing resource
+                    delete[] elements;
+
+                    size = other.size;
+                    capacity = other.capacity;
+                    elements = other.elements;
+                    other.elements = nullptr;
+                }
+
+                return *this;
+            }
+
             ~vector()
             {
                 std::cout << "destructor" << std::endl;
